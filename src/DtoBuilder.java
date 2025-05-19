@@ -65,7 +65,7 @@ public class DtoBuilder {
         return Character.toUpperCase(str.charAt(0)) + str.substring(1);
     }
     public static void main(String[] args) {
-        Map<String, String> dtos = buildDtos("jdbc:mysql://localhost:3306/dispositivo",
+        Map<String, String> dtos = buildDtos("jdbc:mysql://localhost:3306/jugadores",
         "root", "password");
         dtos.forEach((table, dto) -> {
             System.out.println("DTO para tabla: " + table);

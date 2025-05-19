@@ -9,6 +9,6 @@ public class Main {
     // }
     
     public static void main(String[] args) throws Exception {
-        new Juego("Cliente Chat", "127.0.0.1", 9000);
+        new Juego("Cliente Chat", "10.4.39.155", 9000);
     }
 }
