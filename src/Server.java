@@ -34,6 +34,10 @@ public class Server {
         System.out.println("Client " + c.getClientIp() + " disconnected");
     }
 
+    public void notifyClientConnected(ClientHandler c) {
+        System.out.println("Client " + c.getClientIp() + " connected");
+    }
+
     public static void main(String[] args) {
         int port = 9000;
         try {

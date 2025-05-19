@@ -9,10 +9,10 @@ public class ClientHandler implements Runnable {
     private final String clientIp;
 
     public ClientHandler(Socket socket, Server server) throws Exception {
-        this.socket   = socket;
-        this.server   = server;
+        this.socket = socket;
+        this.server = server;
         this.clientIp = socket.getInetAddress().getHostAddress();
-        this.oos      = new ObjectOutputStream(socket.getOutputStream());
+        this.oos = new ObjectOutputStream(socket.getOutputStream());
     }
 
     @Override
