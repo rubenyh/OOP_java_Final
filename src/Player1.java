@@ -1,3 +1,4 @@
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -12,6 +13,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -40,15 +42,24 @@ JButton confirmar = new JButton("Confirmar");
     ventana.add(pantalla, BorderLayout.CENTER);
 seccionBotones.setLayout(new FlowLayout());
 
-
-List<JButton> botonesOpciones = new ArrayList<>();
+//botones con acciones 
+List<JButton> botonesOpciones = new ArrayList<>();//lista que guarda las opciones de los botones
 String[] opciones = {"PIEDRA", "PAPEL", "TIJERAS", "LAGARTO", "SPOCK"};
-for (String opcion : opciones) {
-JButton boton = new JButton(opcion);
- boton.setPreferredSize(new Dimension(140,200));
+String[] rutasimg = {"img/rock.png","img/paper.png","img/scissors.png","img/lizzard.png","img/spock.png"};
+
+for (int i = 0; i < opciones.length; i++){
+String opcion = opciones[i];
+ImageIcon iconoOriginal = new ImageIcon(rutasimg[i]);
+Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(121, 190, Image.SCALE_SMOOTH);
+Image iconoMostrar = iconoOriginal.getImage().getScaledInstance(230, 400, Image.SCALE_SMOOTH);
+ImageIcon iconoEscalado = new ImageIcon(imagenEscalada);
+ImageIcon iconoxMostrar = new ImageIcon(iconoMostrar);
+
+JButton boton = new JButton(opcion,iconoEscalado);
+ boton.setPreferredSize(new Dimension(121,193));
  boton.addActionListener(new ActionListener() {
 public void actionPerformed(ActionEvent e) {
- movimiento.setText("Seleccionaste: " + opcion);
+ movimiento.setIcon(iconoxMostrar);
  }
  });
 seccionBotones.add(boton);
@@ -61,14 +72,16 @@ confirmar.addActionListener(x -> {
 confirmar.setBackground(Color.GREEN);
 confirmar.setText("¡Confirmado!");
 confirmado[0] = true;
-for (JButton boton : botonesOpciones) {
+for (JButton boton : botonesOpciones)//desactiva las botones
+{
  boton.setEnabled(false);
  }
  } else {
  confirmar.setBackground(Color.LIGHT_GRAY);
  confirmar.setText("Confirmar");
  confirmado[0] = false;
-for (JButton boton : botonesOpciones) {
+for (JButton boton : botonesOpciones)//vuelve a activar lo botones 
+{
  boton.setEnabled(true);
  }
     }
