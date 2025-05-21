@@ -5,9 +5,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Server {
     private final int port;
+    private String hostIp;
     private final List<ClientHandler> clients = new CopyOnWriteArrayList<>();
 
     public Server(int port) {
+        this.port = port;
+    }
+
+    public Server(String hostip, int port){
+        this.hostIp = hostip;
         this.port = port;
     }
 
@@ -20,6 +26,8 @@ public class Server {
             ClientHandler handler = new ClientHandler(clientSock, this);
             clients.add(handler);
             new Thread(handler).start();
+            notifyClientConnected(handler);
+            removeClient(handler);
         }
     }
 
@@ -28,6 +36,7 @@ public class Server {
             c.send(msg);
         }
     }
+
 
     public void removeClient(ClientHandler c) {
         clients.remove(c);

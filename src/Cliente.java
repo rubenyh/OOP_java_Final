@@ -3,15 +3,20 @@ import java.net.Socket;
 
 public class Cliente {
     private String hostIp;
-    private String clientIp;
+    private int port;
     private Juego juego;
 
-    public Cliente(String hostIp, String clientIp, String juegoTitulo) throws Exception {
+    public Cliente(String hostIp, int port, String juegoTitulo) throws Exception {
         this.hostIp = hostIp;
-        this.clientIp = clientIp;
+        this.port = port;
+        Socket socket = new Socket(hostIp, port);
         this.juego = new Juego(juegoTitulo);
     }
 
+
+    public void connectServer(String hostIp){
+        
+    }
     public void enviar(int puerto, String mensaje) {
         try (Socket cliente = new Socket(hostIp, puerto);
              ObjectOutputStream oos = new ObjectOutputStream(cliente.getOutputStream())) {

@@ -21,20 +21,18 @@ public class ClientHandler implements Runnable {
             Object obj;
             while ((obj = ois.readObject()) != null) {
                 String msg = (String) obj;
-                // Prefix with IP as username
                 String tagged = clientIp + ": " + msg;
                 System.out.println("[" + clientIp + "] " + msg);
                 server.broadcast(tagged);
             }
         } catch (Exception ignored) {
-            // Client disconnected or error
+            server.removeClient(this);
         } finally {
             server.removeClient(this);
             try { socket.close(); } catch (Exception ignored) {}
         }
     }
 
-    /** Sends a message to this client */
     public void send(String msg) {
         try {
             oos.writeObject(msg);
