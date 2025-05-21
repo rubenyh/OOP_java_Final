@@ -1,39 +1,34 @@
-
 import java.sql.*;
 import java.util.*;
 
 @SuppressWarnings("unused")
-public class DispositivoDAO extends ConexionBD {
-    private static final String DIRECCION_MAC = "direccion_mac";
-    private static final String USUARIO = "usuario";
-    private static final String ESTADO = "estado";
-    private static final String NOMBRE_DISP = "nombre_disp";
-    private static final String TIPO = "tipo";
+public class JugadoresDAO extends ConexionBD {
+    private static final String NOMBRE = "direccion_mac";
+    private static final String PUNTOS = "puntos"; //Se debe de cambiar a puntos
+    private static final String IP = "ip";
 
-    private static final String SQL_SELECT_ALL = "SELECT * FROM DISPOSITIVO";
+    private static final String SQL_SELECT_ALL = "SELECT * FROM JUGADORES";
 
-    private static final String SQL_INSERT = "INSERT INTO DISPOSITIVO" +
-            "(" + DIRECCION_MAC +
-            "," + USUARIO +
-            "," + ESTADO +
-            "," + NOMBRE_DISP +
-            "," + TIPO +
+    private static final String SQL_INSERT = "INSERT INTO JUGADORES" +
+            "(" + NOMBRE +
+            "," + PUNTOS +
+            "," + IP +
             ") VALUES (?,?,?,?,?)";
 
-    private static final String SQL_READ = "SELECT * FROM DISPOSITIVO WHERE " +
+    private static final String SQL_READ = "SELECT * FROM JUGADORES WHERE " +
             DIRECCION_MAC + " = ?";
 
-    private static final String SQL_DELETE = "DELETE FROM DISPOSITIVO WHERE " +
+    private static final String SQL_DELETE = "DELETE FROM JUGADORES WHERE " +
             DIRECCION_MAC + " = ?";
 
-    private static final String SQL_UPDATE = "UPDATE DISPOSITIVO SET " +
+    private static final String SQL_UPDATE = "UPDATE JUGADORES SET " +
             USUARIO + " = ?," +
             ESTADO + " = ?," +
             NOMBRE_DISP + " = ?," +
             TIPO + " = ? " +
             "WHERE " + DIRECCION_MAC + " = ?";
 
-    public DispositivoDAO() {
+    public JugadoresDAO() {
         super();
     }
 
@@ -55,7 +50,7 @@ public class DispositivoDAO extends ConexionBD {
         return result;
     }
 
-    public void append(DispositivoDTO dto) throws Exception {
+    public void append(JugadoresDTO dto) throws Exception {
         PreparedStatement ps = null;
         // Objeto sobre el cual se almacena la consulta SQL previamente creada
         ps = conexion.prepareStatement(SQL_INSERT);
@@ -70,7 +65,7 @@ public class DispositivoDAO extends ConexionBD {
         cerrar(ps);
     }
 
-    public void update(DispositivoDTO dto) throws Exception {
+    public void update(JugadoresDTO dto) throws Exception {
         PreparedStatement ps = null;
         ps = conexion.prepareStatement(SQL_UPDATE);
         ps.setString(1, dto.getUsuario());
@@ -82,7 +77,7 @@ public class DispositivoDAO extends ConexionBD {
         cerrar(ps);
     }
 
-    public void delete(DispositivoDTO dto) throws Exception {
+    public void delete(JugadoresDTO dto) throws Exception {
         PreparedStatement ps = null;
         ps = conexion.prepareStatement(SQL_DELETE);
         ps.setString(1, dto.getDireccionMac());

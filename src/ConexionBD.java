@@ -8,8 +8,8 @@ public class ConexionBD {
 
     public ConexionBD() {
         String usr = "root";
-        String pwd = "root";
-        String url = "jdbc:mysql://localhost:3306/movil";
+        String pwd = "password";
+        String url = "jdbc:mysql://localhost:3306/jugadores";
         String driver = "com.mysql.jdbc.Driver";
         try {
             Class.forName(driver);
