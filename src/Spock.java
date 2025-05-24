@@ -8,4 +8,9 @@ public class Spock implements Movimiento {
     public boolean ganaContra(Movimiento otro) {
         return otro.getNombre().equals("Tijera") || otro.getNombre().equals("Piedra");
     }
+
+    @Override
+    public String getRutaImagen() {
+        return "img/spock.png";
+    }
 }

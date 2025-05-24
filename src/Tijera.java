@@ -8,4 +8,9 @@ public class Tijera implements Movimiento {
     public boolean ganaContra(Movimiento otro) {
         return otro.getNombre().equals("Papel") || otro.getNombre().equals("Lagarto");
     }
+
+    @Override
+    public String getRutaImagen() {
+        return "img/scissors.png";
+    }
 }

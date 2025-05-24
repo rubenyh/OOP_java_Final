@@ -7,31 +7,48 @@ import java.util.List;
 public class PanelOpciones {
     private JPanel panel;
     private List<JButton> botones;
-    private JLabel movimiento;
+    private JLabel movimientoLabel;
+    private Movimiento movimientoSeleccionado;
 
-    private final String[] opciones = {"PIEDRA", "PAPEL", "TIJERAS", "LAGARTO", "SPOCK"};
-    private final String[] rutasimg = {"img/rock.png", "img/paper.png", "img/scissors.png", "img/lizzard.png", "img/spock.png"};
+    private final Movimiento[] movimientos = {
+            new Piedra(),
+            new Papel(),
+            new Tijera(),
+            new Lagarto(),
+            new Spock()
+    };
 
-    public PanelOpciones(JLabel movimiento) {
-        this.movimiento = movimiento;
-        panel = new JPanel(new FlowLayout());
-            panel.setBackground(new Color(229, 210, 154)); 
-        botones = new ArrayList<>();
+    public PanelOpciones(JLabel movimientoLabel) {
+        this.movimientoLabel = movimientoLabel;
+        this.panel = new JPanel(new FlowLayout());
+        this.panel.setBackground(new Color(229, 210, 154));
+        this.botones = new ArrayList<>();
         crearBotones();
     }
 
     private void crearBotones() {
-        for (int i = 0; i < opciones.length; i++) {
-            String opcion = opciones[i];
-            ImageIcon iconoOriginal = new ImageIcon(rutasimg[i]);
+        for (Movimiento mov : movimientos) {
+            // Asegúrate que getRutaImagen() retorna una ruta válida (ej. "/img/paper.png")
+            java.net.URL ruta = getClass().getResource(mov.getRutaImagen());
+            if (ruta == null) {
+                System.err.println("No se encontró la imagen para: " + mov.getNombre());
+                continue; // Salta si no se encontró la imagen
+            }
+
+            ImageIcon iconoOriginal = new ImageIcon(ruta);
             Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(121, 190, Image.SCALE_SMOOTH);
             Image iconoMostrar = iconoOriginal.getImage().getScaledInstance(230, 400, Image.SCALE_SMOOTH);
             ImageIcon iconoEscalado = new ImageIcon(imagenEscalada);
-            ImageIcon iconoxMostrar = new ImageIcon(iconoMostrar);
+            ImageIcon iconoGrande = new ImageIcon(iconoMostrar);
 
-            JButton boton = new JButton(opcion, iconoEscalado);
+            JButton boton = new JButton(mov.getNombre(), iconoEscalado);
             boton.setPreferredSize(new Dimension(121, 193));
-            boton.addActionListener((ActionEvent e) -> movimiento.setIcon(iconoxMostrar));
+
+            boton.addActionListener((ActionEvent e) -> {
+                movimientoLabel.setIcon(iconoGrande);
+                movimientoSeleccionado = mov;
+            });
+
             panel.add(boton);
             botones.add(boton);
         }
@@ -41,8 +58,8 @@ public class PanelOpciones {
         return panel;
     }
 
-    public List<JButton> getBotones() {
-        return botones;
+    public Movimiento getMovimientoSeleccionado() {
+        return movimientoSeleccionado;
     }
 
     public void setBotonesHabilitados(boolean estado) {
@@ -50,4 +67,9 @@ public class PanelOpciones {
             boton.setEnabled(estado);
         }
     }
+
+    public List<JButton> getBotones() {
+        return botones;
+    }
+
 }

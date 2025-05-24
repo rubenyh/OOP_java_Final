@@ -9,4 +9,8 @@ public class Papel implements Movimiento {
         return otro.getNombre().equals("Piedra") || otro.getNombre().equals("Spock");
     }
 
+    @Override
+    public String getRutaImagen() {
+        return "/img/paper.png";
+    }
 }

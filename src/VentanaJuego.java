@@ -11,11 +11,11 @@ public class VentanaJuego {
 
     public VentanaJuego() {
         ventana = new JFrame();
-         ventana.setBackground(new Color(22, 132, 75));
+        ventana.setBackground(new Color(22, 132, 75));
         pantalla = new JPanel();
-         pantalla.setOpaque(false); 
+        pantalla.setOpaque(false);
         centro = new JPanel(new BorderLayout());
-         centro.setOpaque(false); 
+        centro.setOpaque(false);
         movimiento = new JLabel("", SwingConstants.CENTER);
 
         configurarVentana();
@@ -42,7 +42,7 @@ public class VentanaJuego {
         confirmar.setFont(new Font("Arial", Font.BOLD, 14));
         confirmar.setBounds(290, 600, 200, 25);
 
-        final boolean[] confirmadoArray = {false};
+        final boolean[] confirmadoArray = { false };
 
         confirmar.addActionListener(e -> {
             if (!confirmadoArray[0]) {

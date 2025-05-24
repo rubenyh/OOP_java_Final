@@ -9,4 +9,8 @@ public class Lagarto implements Movimiento {
         return otro.getNombre().equals("Papel") || otro.getNombre().equals("Spock");
     }
 
+    @Override
+    public String getRutaImagen() {
+        return "img/lizzard.png";
+    }
 }
