@@ -27,7 +27,6 @@ public class Server {
             clients.add(handler);
             new Thread(handler).start();
             notifyClientConnected(handler);
-            removeClient(handler);
         }
     }
 
