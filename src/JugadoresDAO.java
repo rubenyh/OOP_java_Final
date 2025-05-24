@@ -3,8 +3,8 @@ import java.util.*;
 
 @SuppressWarnings("unused")
 public class JugadoresDAO extends ConexionBD {
-    private static final String NOMBRE = "direccion_mac";
-    private static final String PUNTOS = "puntos"; //Se debe de cambiar a puntos
+    private static final String NOMBRE = "nombre";
+    private static final String PUNTOS = "puntos"; //Se debe de cambiar a int
     private static final String IP = "ip";
 
     private static final String SQL_SELECT_ALL = "SELECT * FROM JUGADORES";
@@ -13,20 +13,18 @@ public class JugadoresDAO extends ConexionBD {
             "(" + NOMBRE +
             "," + PUNTOS +
             "," + IP +
-            ") VALUES (?,?,?,?,?)";
+            ") VALUES (?,?,?)";
 
     private static final String SQL_READ = "SELECT * FROM JUGADORES WHERE " +
-            DIRECCION_MAC + " = ?";
+            IP + " = ?";
 
     private static final String SQL_DELETE = "DELETE FROM JUGADORES WHERE " +
-            DIRECCION_MAC + " = ?";
+            IP + " = ?";
 
     private static final String SQL_UPDATE = "UPDATE JUGADORES SET " +
-            USUARIO + " = ?," +
-            ESTADO + " = ?," +
-            NOMBRE_DISP + " = ?," +
-            TIPO + " = ? " +
-            "WHERE " + DIRECCION_MAC + " = ?";
+            NOMBRE + " = ?," +
+            PUNTOS + " = ?," +
+            "WHERE " + IP + " = ?";
 
     public JugadoresDAO() {
         super();
@@ -55,11 +53,9 @@ public class JugadoresDAO extends ConexionBD {
         // Objeto sobre el cual se almacena la consulta SQL previamente creada
         ps = conexion.prepareStatement(SQL_INSERT);
         // ps.setString sustituye cada uno de los símbolos de interrogación en la sentencia SQL por los valores deseados
-        ps.setString(1, dto.getDireccionMac());
-        ps.setString(2, dto.getUsuario());
-        ps.setString(3, dto.getEstado());
-        ps.setString(4, dto.getNombreDisp());
-        ps.setString(5, dto.getTipo());
+        ps.setString(1, dto.getNombre());
+        ps.setInt(2, dto.getPuntos());
+        ps.setString(3, dto.getIp());
         // Ejecuta la actualización
         ps.executeUpdate();
         cerrar(ps);
@@ -68,11 +64,9 @@ public class JugadoresDAO extends ConexionBD {
     public void update(JugadoresDTO dto) throws Exception {
         PreparedStatement ps = null;
         ps = conexion.prepareStatement(SQL_UPDATE);
-        ps.setString(1, dto.getUsuario());
-        ps.setString(2, dto.getEstado());
-        ps.setString(3, dto.getNombreDisp());
-        ps.setString(4, dto.getTipo());
-        ps.setString(5, dto.getDireccionMac());
+        ps.setString(1, dto.getNombre());
+        ps.setInt(2, dto.getPuntos());
+        ps.setString(3, dto.getIp());
         ps.executeUpdate();
         cerrar(ps);
     }
@@ -80,7 +74,7 @@ public class JugadoresDAO extends ConexionBD {
     public void delete(JugadoresDTO dto) throws Exception {
         PreparedStatement ps = null;
         ps = conexion.prepareStatement(SQL_DELETE);
-        ps.setString(1, dto.getDireccionMac());
+        ps.setString(1, dto.getIp());
         ps.executeUpdate();
         cerrar(ps);
     }
