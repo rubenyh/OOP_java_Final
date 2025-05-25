@@ -3,51 +3,48 @@ import java.util.*;
 
 @SuppressWarnings("unused")
 public class JugadoresDAO extends ConexionBD {
-    private static final String NOMBRE = "direccion_mac";
-    private static final String PUNTOS = "puntos"; //Se debe de cambiar a puntos
+    private static final String NOMBRE = "nombre";
+    private static final String PUNTOS = "puntos"; //Se debe de cambiar a int
     private static final String IP = "ip";
 
-    private static final String SQL_SELECT_ALL = "SELECT * FROM JUGADORES";
+    private static final String SQL_SELECT_ALL = "SELECT * FROM jugadores";
 
-    private static final String SQL_INSERT = "INSERT INTO JUGADORES" +
+    private static final String SQL_INSERT = "INSERT INTO jugadores" +
             "(" + NOMBRE +
             "," + PUNTOS +
             "," + IP +
-            ") VALUES (?,?,?,?,?)";
+            ") VALUES (?,?,?)";
 
-    private static final String SQL_READ = "SELECT * FROM JUGADORES WHERE " +
-            DIRECCION_MAC + " = ?";
+    private static final String SQL_READ = "SELECT * FROM jugadores WHERE " +
+            IP + " = ?";
 
-    private static final String SQL_DELETE = "DELETE FROM JUGADORES WHERE " +
-            DIRECCION_MAC + " = ?";
+    private static final String SQL_DELETE = "DELETE FROM jugadores WHERE " +
+            IP + " = ?";
 
-    private static final String SQL_UPDATE = "UPDATE JUGADORES SET " +
-            USUARIO + " = ?," +
-            ESTADO + " = ?," +
-            NOMBRE_DISP + " = ?," +
-            TIPO + " = ? " +
-            "WHERE " + DIRECCION_MAC + " = ?";
+    private static final String SQL_UPDATE = "UPDATE jugadores SET " +
+            NOMBRE + " = ?," +
+            PUNTOS + " = ? " +
+            "WHERE " + IP + " = ?";
 
     public JugadoresDAO() {
         super();
     }
 
-    public List readAll() throws Exception {
-        // Encargado de almacenar el resultado de la consulta a la base de datos
-        ResultSet rs = null;
-        List result = new ArrayList();
-        // Coloca la sentencia SQL en el PreparedStatement
-        PreparedStatement ps = conexion.prepareStatement(SQL_SELECT_ALL);
-        // Ejecuta la consulta en la base de datos, y almacena el resultado en el ResultSet
-        rs = ps.executeQuery();
+    public List<JugadoresDTO> readAll() throws SQLException {
+    List<JugadoresDTO> result = new ArrayList<>();
+    String sql = "SELECT * FROM jugadores";
+    try (PreparedStatement ps = conexion.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
-            // Obtiene uno a uno los objetos del rs para almacenarlos en la lista que será regresada
-            result.add(rs.getObject(String.valueOf(rs)));
+            JugadoresDTO dto = new JugadoresDTO();
+            dto.setId(rs.getInt("id"));
+            dto.setNombre(rs.getString("nombre"));
+            dto.setPuntos(rs.getInt("puntos"));
+            dto.setIp(rs.getString("ip"));
+            result.add(dto);
         }
-        // Cierra los flujos de datos
-        cerrar(ps);
-        cerrar(rs);
-        return result;
+    }
+    return result;
     }
 
     public void append(JugadoresDTO dto) throws Exception {
@@ -55,11 +52,9 @@ public class JugadoresDAO extends ConexionBD {
         // Objeto sobre el cual se almacena la consulta SQL previamente creada
         ps = conexion.prepareStatement(SQL_INSERT);
         // ps.setString sustituye cada uno de los símbolos de interrogación en la sentencia SQL por los valores deseados
-        ps.setString(1, dto.getDireccionMac());
-        ps.setString(2, dto.getUsuario());
-        ps.setString(3, dto.getEstado());
-        ps.setString(4, dto.getNombreDisp());
-        ps.setString(5, dto.getTipo());
+        ps.setString(1, dto.getNombre());
+        ps.setInt(2, dto.getPuntos());
+        ps.setString(3, dto.getIp());
         // Ejecuta la actualización
         ps.executeUpdate();
         cerrar(ps);
@@ -68,11 +63,9 @@ public class JugadoresDAO extends ConexionBD {
     public void update(JugadoresDTO dto) throws Exception {
         PreparedStatement ps = null;
         ps = conexion.prepareStatement(SQL_UPDATE);
-        ps.setString(1, dto.getUsuario());
-        ps.setString(2, dto.getEstado());
-        ps.setString(3, dto.getNombreDisp());
-        ps.setString(4, dto.getTipo());
-        ps.setString(5, dto.getDireccionMac());
+        ps.setString(1, dto.getNombre());
+        ps.setInt(2, dto.getPuntos());
+        ps.setString(3, dto.getIp());
         ps.executeUpdate();
         cerrar(ps);
     }
@@ -80,7 +73,7 @@ public class JugadoresDAO extends ConexionBD {
     public void delete(JugadoresDTO dto) throws Exception {
         PreparedStatement ps = null;
         ps = conexion.prepareStatement(SQL_DELETE);
-        ps.setString(1, dto.getDireccionMac());
+        ps.setString(1, dto.getIp());
         ps.executeUpdate();
         cerrar(ps);
     }

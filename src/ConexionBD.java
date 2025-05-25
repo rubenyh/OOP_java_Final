@@ -9,8 +9,8 @@ public class ConexionBD {
     public ConexionBD() {
         String usr = "root";
         String pwd = "password";
-        String url = "jdbc:mysql://localhost:3306/jugadores";
-        String driver = "com.mysql.jdbc.Driver";
+        String url = "jdbc:mysql://localhost:3306/juego";
+        String driver = "com.mysql.cj.jdbc.Driver";
         try {
             Class.forName(driver);
             conexion = DriverManager.getConnection(url, usr, pwd);
