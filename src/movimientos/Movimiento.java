@@ -1,3 +1,4 @@
+package movimientos;
 public interface Movimiento {
     String getNombre();
 

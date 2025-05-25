@@ -1,3 +1,5 @@
+package movimientos;
+
 public class Papel implements Movimiento {
     @Override
     public String getNombre() {

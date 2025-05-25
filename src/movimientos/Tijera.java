@@ -1,3 +1,4 @@
+package movimientos;
 public class Tijera implements Movimiento {
     @Override
     public String getNombre() {

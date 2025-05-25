@@ -1,3 +1,5 @@
+import movimientos.Movimiento;
+
 public class Logica {
 
     public static void jugar(Movimiento jugador1, Movimiento jugador2) {

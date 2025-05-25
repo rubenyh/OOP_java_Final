@@ -1,4 +1,12 @@
 import javax.swing.*;
+
+import movimientos.Lagarto;
+import movimientos.Movimiento;
+import movimientos.Papel;
+import movimientos.Piedra;
+import movimientos.Spock;
+import movimientos.Tijera;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;

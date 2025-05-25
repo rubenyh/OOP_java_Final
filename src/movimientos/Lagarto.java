@@ -1,3 +1,4 @@
+package movimientos;
 public class Lagarto implements Movimiento {
     @Override
     public String getNombre() {

@@ -1,8 +1,11 @@
 //Este archivo es unicamente para probar que la base de datos funcione, debe de salir todo OK
 //en caso de que esté todo correcto
-//24-mayo todo dio OK
+//25-mayo todo dio OK
 
 import java.util.List;
+
+import database.JugadoresDAO;
+import database.JugadoresDTO;
 
 public class TestJugadoresDAO {
     public static void main(String[] args) {

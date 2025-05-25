@@ -1,3 +1,4 @@
+package database;
 import java.io.Serializable;
 
 public class JugadoresDTO implements Serializable{

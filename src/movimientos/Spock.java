@@ -1,3 +1,4 @@
+package movimientos;
 public class Spock implements Movimiento {
     @Override
     public String getNombre() {

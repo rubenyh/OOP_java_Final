@@ -1,3 +1,4 @@
+package movimientos;
 public class Piedra implements Movimiento {
     @Override
     public String getNombre() {
