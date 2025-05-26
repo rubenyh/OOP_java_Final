@@ -38,7 +38,6 @@ public class Server {
             if (existe != null) {
                 int i = existe.getPuntos();
                 dao.incrementarPuntoPorIp(clientIp, i);
-                System.out.println("Sumado 1 punto a " + clientIp);
             } else {
                 JugadoresDTO nuevo = new JugadoresDTO();
                 nuevo.setNombre("BBB");

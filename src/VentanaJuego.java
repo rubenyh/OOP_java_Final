@@ -1,5 +1,3 @@
-import database.JugadoresDAO;
-import database.JugadoresDTO;
 import java.awt.*;
 import javax.swing.*;
 import movimientos.Lagarto;
@@ -39,7 +37,6 @@ public class VentanaJuego implements Mensaje {
         configurarConfirmar();
         configurarCentro();
         configurarBotones();
-        conexionBaseDatos();
 
         ventana.setVisible(true);
     }
@@ -171,19 +168,7 @@ public class VentanaJuego implements Mensaje {
         ventana.add(panelOpciones.getPanel(), BorderLayout.SOUTH);
     }
 
-    private void conexionBaseDatos() {
-        try {
-            JugadoresDTO nuevo = new JugadoresDTO();
-            nuevo.setNombre("AAA");
-            nuevo.setPuntos(0);
-            nuevo.setIp(new IPAddress().getIp());
-            new JugadoresDAO().append(nuevo);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void actualizarEstadoConexion(boolean online) {
+    public void actualizarEstadoConexion(boolean online) {
         if (online) {
             estadoConexion.setText("Online");
             estadoConexion.setForeground(Color.GREEN);
