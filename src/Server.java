@@ -48,6 +48,7 @@ public class Server {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+            broadcast("STATE:ONLINE:" + clientIp);
 
             ClientHandler handler = new ClientHandler(clientSock, this);
             clients.add(handler);
@@ -66,10 +67,13 @@ public class Server {
     public void removeClient(ClientHandler c) {
         clients.remove(c);
         System.out.println("Client " + c.getClientIp() + " disconnected");
+        broadcast("STATE:OFFLINE:");
+
     }
 
     public void notifyClientConnected(ClientHandler c) {
         System.out.println("Client " + c.getClientIp() + " connected");
+        broadcast("STATE:ONLINE:");
     }
 
     public static void main(String[] args) {
