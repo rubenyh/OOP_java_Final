@@ -4,13 +4,14 @@ import java.net.Socket;
 public class Cliente {
     private String hostIp;
     private int port;
-    private Juego juego;
+    private VentanaJuego juego;
 
     public Cliente(String hostIp, int port, String juegoTitulo) throws Exception {
         this.hostIp = hostIp;
         this.port = port;
         Socket socket = new Socket(hostIp, port);
-        this.juego = new Juego(juegoTitulo);
+        this.juego = new VentanaJuego();
+        this.juego.mostrar();
     }
 
 
