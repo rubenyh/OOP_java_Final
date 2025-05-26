@@ -1,6 +1,5 @@
-import javax.swing.*;
 import java.awt.*;
-//Imports of the movement
+import javax.swing.*;
 import movimientos.Lagarto;
 import movimientos.Movimiento;
 import movimientos.Papel;
