@@ -2,6 +2,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import javax.swing.SwingUtilities;
+
 public class Cliente {
     private final String hostIp;
     private final int port;
@@ -39,11 +41,32 @@ public class Cliente {
             try {
                 Object msg;
                 while ((msg = ois.readObject()) != null) {
-                    juego.mensaje_entrante(msg);
+                    if (msg instanceof String) {
+                        String s = (String) msg;
+                        if (s.startsWith("STATE:ONLINE")) {
+                            // Llamada directa para poner Online
+                            SwingUtilities.invokeLater(() ->
+                                juego.actualizarEstadoConexion(true)
+                            );
+                        } else if (s.startsWith("STATE:OFFLINE")) {
+                            // Llamada directa para poner Offline
+                            SwingUtilities.invokeLater(() ->
+                                juego.actualizarEstadoConexion(false)
+                            );
+                        } else {
+                            // Cualquier otro mensaje lo muestra en un diálogo
+                            SwingUtilities.invokeLater(() ->
+                                juego.mensaje_entrante(s)
+                            );
+                        }
+                    }
                 }
             } catch (Exception e) {
-                System.err.println("Conexión al servidor cerrada.");
+                // Si el socket se cierra, marcamos Offline también
+                SwingUtilities.invokeLater(() ->
+                    juego.actualizarEstadoConexion(false)
+                );
             }
         }).start();
-    }
+}
 }

@@ -1,18 +1,22 @@
 import database.JugadoresDAO;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import movimientos.Movimiento;
+import database.JugadoresDAO;
+import database.JugadoresDTO;
 
 
 public class Server {
     private final int port;
     private final List<ClientHandler> clients = new CopyOnWriteArrayList<>();
     private final Map<String,String> pendingMoves = new ConcurrentHashMap<>();
+    JugadoresDAO dao = new JugadoresDAO();
 
     public Server(int port) {
         this.port = port;
@@ -26,27 +30,36 @@ public class Server {
         while (true) {
             Socket clientSock = serverSocket.accept();
             String clientIp = clientSock.getInetAddress().getHostAddress();
-
-            // database logic: increment or append
-            // try {
-            //     JugadoresDTO existe = dao.readByIp(clientIp);
-            //     if (existe != null) {
-            //         dao.incrementarPuntoPorIp(clientIp, existe.getPuntos());
-            //     } else {
-            //         JugadoresDTO nuevo = new JugadoresDTO();
-            //         nuevo.setNombre("AAA");
-            //         nuevo.setPuntos(1);
-            //         nuevo.setIp(clientIp);
-            //         dao.append(nuevo);
-            //     }
-            // } catch (SQLException e) {
-            //     e.printStackTrace();
-            // }
+            
+            
+            try {
+            // Si ya existe, suma 1; si no, crea con 1 punto
+            JugadoresDTO existe = dao.readByIp(clientIp);
+            if (existe != null) {
+                int i = existe.getPuntos();
+                dao.incrementarPuntoPorIp(clientIp, i);
+            } else {
+                JugadoresDTO nuevo = new JugadoresDTO();
+                nuevo.setNombre("BBB");
+                nuevo.setPuntos(1);
+                nuevo.setIp(clientIp);
+                dao.append(nuevo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+            broadcast("STATE:ONLINE:" + clientIp);
 
             ClientHandler handler = new ClientHandler(clientSock, this);
             clients.add(handler);
             new Thread(handler).start();
-            System.out.println("Client connected: " + clientIp);
+            notifyClientConnected(handler);
+        }
+    }
+
+        public void broadcast(String msg) {
+        for (ClientHandler c : clients) {
+            c.send(msg);
         }
     }
 
@@ -81,6 +94,12 @@ public class Server {
     public void removeClient(ClientHandler c) {
         clients.remove(c);
         System.out.println("Client disconnected: " + c.getClientIp());
+        broadcast("STATE:OFFLINE:");
+    }
+
+    public void notifyClientConnected(ClientHandler c) {
+        System.out.println("Client " + c.getClientIp() + " connected");
+        broadcast("STATE:ONLINE:");
     }
 
     public static void main(String[] args) throws Exception {

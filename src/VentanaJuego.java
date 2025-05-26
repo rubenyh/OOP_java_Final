@@ -145,7 +145,7 @@ public class VentanaJuego implements Mensaje {
         }
     }
 
-    private void actualizarEstadoConexion(boolean online) {
+    public void actualizarEstadoConexion(boolean online) {
         if (online) {
             estadoConexion.setText("Online");
             estadoConexion.setForeground(Color.GREEN);
