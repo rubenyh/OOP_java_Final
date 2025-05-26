@@ -20,11 +20,19 @@ public class ClientHandler implements Runnable {
         try (var ois = new ObjectInputStream(socket.getInputStream())) {
             Object obj;
             while ((obj = ois.readObject()) != null) {
-                String msg = (String) obj;
-                String tagged = clientIp + ": " + msg;
-                System.out.println("[" + clientIp + "] " + msg);
-                server.broadcast(tagged);
+                if (obj instanceof MensajeMovimiento) {
+                    MensajeMovimiento mm = (MensajeMovimiento) obj;
+                    String tagged = clientIp + " ha seleccionado: " + mm.getMovimiento();
+                    System.out.println("[" + clientIp + "] " + mm.getMovimiento());
+                    server.broadcast(tagged);
             }
+        }
+            // while ((obj = ois.readObject()) != null) {
+            //     String msg = (String) obj;
+            //     String tagged = clientIp + ": " + msg;
+            //     System.out.println("[" + clientIp + "] " + msg);
+            //     server.broadcast(tagged);
+            // }
         } catch (Exception ignored) {
             server.removeClient(this);
         } finally {

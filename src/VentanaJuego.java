@@ -1,38 +1,35 @@
-import javax.swing.*;
-import java.awt.*;
-//Imports for the database
 import database.JugadoresDAO;
 import database.JugadoresDTO;
+import java.awt.*;
+import javax.swing.*;
+import movimientos.Movimiento;
 
-public class VentanaJuego {
+public class VentanaJuego implements Mensaje {
     private JFrame ventana;
     private JPanel pantalla;
     private JPanel centro;
-    private JLabel movimiento;
+    private JLabel movimientoLabel;
     private JButton confirmar;
     private PanelOpciones panelOpciones;
+    private Cliente cliente;
 
-    public VentanaJuego() {
-        ventana = new JFrame();
-        ventana.setBackground(new Color(22, 132, 75));
-        pantalla = new JPanel();
-        pantalla.setOpaque(false);
-        centro = new JPanel(new BorderLayout());
-        centro.setOpaque(false);
-        movimiento = new JLabel("", SwingConstants.CENTER);
+    public VentanaJuego(Cliente cliente, String titulo) {
+        this.cliente = cliente;
+        ventana = new JFrame(titulo);
+        ventana.getContentPane().setBackground(new Color(22, 132, 75));
+        pantalla = new JPanel(); pantalla.setOpaque(false);
+        centro = new JPanel(new BorderLayout()); centro.setOpaque(false);
+        movimientoLabel = new JLabel("", SwingConstants.CENTER);
 
         configurarVentana();
         configurarConfirmar();
         configurarCentro();
         configurarBotones();
         conexionBaseDatos();
-
-        ventana.setVisible(true);
     }
 
     private void configurarVentana() {
         ventana.setSize(800, 900);
-        ventana.getContentPane().setBackground(new Color(22, 132, 75));
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.setLayout(new BorderLayout());
         ventana.add(pantalla, BorderLayout.CENTER);
@@ -44,38 +41,29 @@ public class VentanaJuego {
         confirmar.setOpaque(true);
         confirmar.setBorderPainted(false);
         confirmar.setFont(new Font("Arial", Font.BOLD, 14));
-        confirmar.setBounds(290, 600, 200, 25);
-
-        final boolean[] confirmadoArray = { false };
 
         confirmar.addActionListener(e -> {
-            if (!confirmadoArray[0]) {
+            Movimiento movSel = panelOpciones.getMovimientoSeleccionado();
+            if (movSel != null) {
+                MensajeMovimiento mm = new MensajeMovimiento(movSel.getNombre());
+                cliente.enviarMensaje(mm);
                 confirmar.setBackground(Color.GREEN);
                 confirmar.setText("¡Confirmado!");
-                confirmadoArray[0] = true;
-                for (JButton boton : panelOpciones.getBotones()) {
-                    boton.setEnabled(false);
-                }
+                panelOpciones.setBotonesHabilitados(false);
             } else {
-                confirmar.setBackground(Color.LIGHT_GRAY);
-                confirmar.setText("Confirmar");
-                confirmadoArray[0] = false;
-                for (JButton boton : panelOpciones.getBotones()) {
-                    boton.setEnabled(true);
-                }
+                JOptionPane.showMessageDialog(ventana, "Selecciona primero un movimiento.");
             }
         });
     }
 
     private void configurarCentro() {
-        centro.add(confirmar, BorderLayout.CENTER);
-        centro.add(movimiento, BorderLayout.CENTER);
+        centro.add(confirmar, BorderLayout.NORTH);
+        centro.add(movimientoLabel, BorderLayout.CENTER);
         ventana.add(centro, BorderLayout.CENTER);
-
     }
 
     private void configurarBotones() {
-        panelOpciones = new PanelOpciones(movimiento);
+        panelOpciones = new PanelOpciones(movimientoLabel);
         ventana.add(panelOpciones.getPanel(), BorderLayout.SOUTH);
     }
 
@@ -86,12 +74,18 @@ public class VentanaJuego {
             nuevo.setPuntos(0);
             nuevo.setIp(new IPAddress().getIp());
             new JugadoresDAO().append(nuevo);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        } catch (Exception e){ e.printStackTrace(); }
     }
 
     public void mostrar() {
-        ventana.setVisible(true);
+        SwingUtilities.invokeLater(() -> ventana.setVisible(true));
+    }
+
+    @Override
+    public void mensaje_entrante(String msj) {
+        // Mostrar mensajes del servidor en un diálogo
+        SwingUtilities.invokeLater(() ->
+            JOptionPane.showMessageDialog(ventana, msj)
+        );
     }
 }
