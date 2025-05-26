@@ -1,5 +1,3 @@
-import database.JugadoresDAO;
-import database.JugadoresDTO;
 import java.awt.*;
 import javax.swing.*;
 import movimientos.Movimiento;
@@ -38,7 +36,6 @@ public class VentanaJuego implements Mensaje {
         configurarConfirmar();
         configurarCentro();
         configurarBotones();
-        conexionBaseDatos();
 
         ventana.setVisible(true);
     }
@@ -134,18 +131,6 @@ public class VentanaJuego implements Mensaje {
         ventana.add(panelOpciones.getPanel(), BorderLayout.SOUTH);
     }
 
-    private void conexionBaseDatos() {
-        try {
-            JugadoresDTO nuevo = new JugadoresDTO();
-            nuevo.setNombre("AAA");
-            nuevo.setPuntos(0);
-            nuevo.setIp(new IPAddress().getIp());
-            new JugadoresDAO().append(nuevo);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void actualizarEstadoConexion(boolean online) {
         if (online) {
             estadoConexion.setText("Online");
@@ -165,7 +150,7 @@ public class VentanaJuego implements Mensaje {
         }
     }
 
-    private void mostrarResultado(ResultadoJuego rj) {
+    public void mostrarResultado(ResultadoJuego rj) {
         String rutaResultado = "/img/tie.gif";
         switch (rj) {
             case GANASTE:
@@ -196,8 +181,19 @@ public class VentanaJuego implements Mensaje {
 
     @Override
     public void mensaje_entrante(Object msg) {
-        if (!(msg instanceof MensajeResultado)) return;
-        MensajeResultado mr = (MensajeResultado) msg;
+        // 1) Si es MensajePuntos, actualizamos los marcadores
+        if (msg instanceof MensajePuntos) {
+            MensajePuntos mp = (MensajePuntos) msg;
+            SwingUtilities.invokeLater(() -> {
+                marcadorJugador1.setText(String.valueOf(mp.getPuntos()));
+                marcadorJugador2.setText(String.valueOf(mp.getPuntosOponente()));
+            });
+            return;
+        }
+
+        // 2) Si es MensajeResultado, procesamos la jugada
+        if (msg instanceof MensajeResultado) {
+            MensajeResultado mr = (MensajeResultado) msg;
 
         setMovimientoIcon(movimientoJugador2,
             MovimientoFactory.create(mr.getSuMovimiento()).getRutaImagen());
@@ -215,7 +211,18 @@ public class VentanaJuego implements Mensaje {
         });
         resetTimer.setRepeats(false);
         resetTimer.start();
+            return;
+        }
+
+        // 3) Si es cualquier otro tipo de mensaje (String, chat...), lo muestras en diálogo
+        if (msg instanceof String) {
+            SwingUtilities.invokeLater(() ->
+                JOptionPane.showMessageDialog(ventana, (String)msg)
+            );
+        }
     }
+
+    
     
 
 }

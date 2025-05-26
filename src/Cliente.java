@@ -44,25 +44,27 @@ public class Cliente {
                     if (msg instanceof String) {
                         String s = (String) msg;
                         if (s.startsWith("STATE:ONLINE")) {
-                            // Llamada directa para poner Online
                             SwingUtilities.invokeLater(() ->
                                 juego.actualizarEstadoConexion(true)
                             );
                         } else if (s.startsWith("STATE:OFFLINE")) {
-                            // Llamada directa para poner Offline
                             SwingUtilities.invokeLater(() ->
                                 juego.actualizarEstadoConexion(false)
                             );
                         } else {
-                            // Cualquier otro mensaje lo muestra en un diálogo
                             SwingUtilities.invokeLater(() ->
                                 juego.mensaje_entrante(s)
                             );
                         }
+                    } else {
+                        // Handle non-String messages correctly
+                        Object resultMsg = msg;
+                        SwingUtilities.invokeLater(() ->
+                            juego.mensaje_entrante(resultMsg)
+                        );
                     }
                 }
             } catch (Exception e) {
-                // Si el socket se cierra, marcamos Offline también
                 SwingUtilities.invokeLater(() ->
                     juego.actualizarEstadoConexion(false)
                 );

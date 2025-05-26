@@ -31,23 +31,6 @@ public class Server {
             Socket clientSock = serverSocket.accept();
             String clientIp = clientSock.getInetAddress().getHostAddress();
             
-            
-            try {
-            // Si ya existe, suma 1; si no, crea con 1 punto
-            JugadoresDTO existe = dao.readByIp(clientIp);
-            if (existe != null) {
-                int i = existe.getPuntos();
-                dao.incrementarPuntoPorIp(clientIp, i);
-            } else {
-                JugadoresDTO nuevo = new JugadoresDTO();
-                nuevo.setNombre("BBB");
-                nuevo.setPuntos(1);
-                nuevo.setIp(clientIp);
-                dao.append(nuevo);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
             broadcast("STATE:ONLINE:" + clientIp);
 
             ClientHandler handler = new ClientHandler(clientSock, this);
@@ -87,6 +70,36 @@ public class Server {
                     c.send(new MensajeResultado(e2.getValue(), e1.getValue(), r2));
                 }
             }
+            try {
+                String ip1 = e1.getKey();
+                String ip2 = e2.getKey();
+                JugadoresDTO dto1 = dao.readByIp(ip1);
+                JugadoresDTO dto2 = dao.readByIp(ip2);
+
+                int puntos1 = dto1.getPuntos();
+                int puntos2 = dto2.getPuntos();
+
+                // Aumentar puntos solo al jugador que ganó
+                if (r1 == ResultadoJuego.GANASTE) {
+                    dao.incrementarPuntoPorIp(ip1, puntos1);
+                } else if (r2 == ResultadoJuego.GANASTE) {
+                    dao.incrementarPuntoPorIp(ip2, puntos2);
+                }
+
+                // Obtener los puntos actualizado
+
+                // Enviar mensaje a cada cliente
+                for (ClientHandler c : clients) {
+                    if (c.getClientIp().equals(ip1)) {
+                        c.send(new MensajePuntos(puntos1, puntos2));
+                    } else if (c.getClientIp().equals(ip2)) {
+                        c.send(new MensajePuntos(puntos2, puntos1));
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
             pendingMoves.clear();
         }
     }
