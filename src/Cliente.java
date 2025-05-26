@@ -14,7 +14,7 @@ public class Cliente {
         this.hostIp = hostIp;           
         this.port = port;
         conectar();
-        VentanaJuego juego = new VentanaJuego(this, juegoTitulo);
+        this.juego = new VentanaJuego(this, juegoTitulo);
         juego.mostrar();
         mensajeServidor();
     }
