@@ -1,5 +1,8 @@
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
-
 import movimientos.Lagarto;
 import movimientos.Movimiento;
 import movimientos.Papel;
@@ -7,12 +10,8 @@ import movimientos.Piedra;
 import movimientos.Spock;
 import movimientos.Tijera;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
-
 public class PanelOpciones {
+    private final ButtonGroup grupo = new ButtonGroup();
     private JPanel panel;
     private List<JButton> botones;
     private JLabel movimientoLabel;
@@ -74,6 +73,9 @@ public class PanelOpciones {
         for (JButton boton : botones) {
             boton.setEnabled(estado);
         }
+    }
+    public void clearSelection() {
+        grupo.clearSelection();
     }
 
     public List<JButton> getBotones() {
