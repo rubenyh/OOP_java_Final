@@ -85,7 +85,8 @@ public class VentanaJuego implements Mensaje {
             if (!confirmado) {
                 Movimiento movSel = panelOpciones.getMovimientoSeleccionado();
                 if (movSel == null) {
-                    JOptionPane.showMessageDialog(ventana, "Selecciona primero un movimiento.");
+                    JOptionPane.showMessageDialog(ventana,
+                        "Selecciona primero un movimiento.");
                     return;
                 }
                 cliente.enviarMensaje(new MensajeMovimiento(movSel.getNombre()));
@@ -201,11 +202,19 @@ public class VentanaJuego implements Mensaje {
         setMovimientoIcon(movimientoJugador2,
             MovimientoFactory.create(mr.getSuMovimiento()).getRutaImagen());
         mostrarResultado(mr.getResultadoParaTi());
-
         confirmado = false;
-        panelOpciones.setBotonesHabilitados(true);
-        confirmar.setText("Confirmar");
-        confirmar.setBackground(Color.LIGHT_GRAY);
+
+        Timer resetTimer = new Timer(3000, e -> {
+            resultado.setVisible(false);
+            movimientoJugador1.setIcon(null);
+            movimientoJugador2.setIcon(null);
+            panelOpciones.clearSelection();
+            panelOpciones.setBotonesHabilitados(true);
+            confirmar.setText("Confirmar");
+            confirmar.setBackground(Color.LIGHT_GRAY);
+        });
+        resetTimer.setRepeats(false);
+        resetTimer.start();
     }
     
 
