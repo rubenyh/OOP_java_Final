@@ -1,8 +1,6 @@
 import database.JugadoresDAO;
-import database.JugadoresDTO;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -30,20 +28,20 @@ public class Server {
             String clientIp = clientSock.getInetAddress().getHostAddress();
 
             // database logic: increment or append
-            try {
-                JugadoresDTO existe = dao.readByIp(clientIp);
-                if (existe != null) {
-                    dao.incrementarPuntoPorIp(clientIp, existe.getPuntos());
-                } else {
-                    JugadoresDTO nuevo = new JugadoresDTO();
-                    nuevo.setNombre("AAA");
-                    nuevo.setPuntos(1);
-                    nuevo.setIp(clientIp);
-                    dao.append(nuevo);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            // try {
+            //     JugadoresDTO existe = dao.readByIp(clientIp);
+            //     if (existe != null) {
+            //         dao.incrementarPuntoPorIp(clientIp, existe.getPuntos());
+            //     } else {
+            //         JugadoresDTO nuevo = new JugadoresDTO();
+            //         nuevo.setNombre("AAA");
+            //         nuevo.setPuntos(1);
+            //         nuevo.setIp(clientIp);
+            //         dao.append(nuevo);
+            //     }
+            // } catch (SQLException e) {
+            //     e.printStackTrace();
+            // }
 
             ClientHandler handler = new ClientHandler(clientSock, this);
             clients.add(handler);

@@ -2,12 +2,7 @@ import database.JugadoresDAO;
 import database.JugadoresDTO;
 import java.awt.*;
 import javax.swing.*;
-import movimientos.Lagarto;
 import movimientos.Movimiento;
-import movimientos.Papel;
-import movimientos.Piedra;
-import movimientos.Spock;
-import movimientos.Tijera;
 
 public class VentanaJuego implements Mensaje {
     private JFrame ventana;
@@ -34,6 +29,9 @@ public class VentanaJuego implements Mensaje {
         centro = new JPanel(new BorderLayout());
         centro.setOpaque(false);
         confirmarPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        confirmar = new JButton("Confirmar");
+        confirmar.setBackground(Color.LIGHT_GRAY);
+        confirmarPanel.add(confirmar);
 
         configurarVentana();
         configurarSuperior();

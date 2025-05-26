@@ -13,7 +13,7 @@ public class Juego extends JFrame implements Mensaje {
     }
 
     @Override
-    public void mensaje_entrante(String msj) {
+    public void mensaje_entrante(Object msj) {
 
     }
 }
