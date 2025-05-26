@@ -1,6 +1,6 @@
 public class Main {
     
     public static void main(String[] args) throws Exception {
-        new Cliente("127.0.0.1", 9000, "Cliente");
+        new Cliente("192.168.1.102", 9000, "Cliente");
     }
 }

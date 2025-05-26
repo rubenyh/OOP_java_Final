@@ -1,8 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-//Imports for the database
-import database.JugadoresDAO;
-import database.JugadoresDTO;
 
 public class VentanaJuego {
     private JFrame ventana;
@@ -25,7 +22,6 @@ public class VentanaJuego {
         configurarConfirmar();
         configurarCentro();
         configurarBotones();
-        conexionBaseDatos();
 
         ventana.setVisible(true);
     }
@@ -77,18 +73,6 @@ public class VentanaJuego {
     private void configurarBotones() {
         panelOpciones = new PanelOpciones(movimiento);
         ventana.add(panelOpciones.getPanel(), BorderLayout.SOUTH);
-    }
-
-    private void conexionBaseDatos(){
-        try{
-            JugadoresDTO nuevo = new JugadoresDTO();
-            nuevo.setNombre("AAA");
-            nuevo.setPuntos(0);
-            nuevo.setIp(new IPAddress().getIp());
-            new JugadoresDAO().append(nuevo);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
     }
 
     public void mostrar() {
