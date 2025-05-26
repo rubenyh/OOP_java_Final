@@ -1,14 +1,13 @@
 import movimientos.Movimiento;
 
 public class Logica {
-
-    public static void jugar(Movimiento jugador1, Movimiento jugador2) {
+    public static ResultadoJuego jugar(Movimiento jugador1, Movimiento jugador2) {
         if (jugador1.ganaContra(jugador2)) {
-            System.out.println("Gana: " + jugador1.getNombre());
+            return ResultadoJuego.GANASTE;
         } else if (jugador2.ganaContra(jugador1)) {
-            System.out.println("Gana: " + jugador2.getNombre());
+            return ResultadoJuego.PERDISTE;
         } else {
-            System.out.println("Empate");
+            return ResultadoJuego.EMPATE;
         }
     }
 }
