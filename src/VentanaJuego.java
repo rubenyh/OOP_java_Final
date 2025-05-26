@@ -23,6 +23,7 @@ public class VentanaJuego implements Mensaje {
     private JButton confirmar;
     private PanelOpciones panelOpciones;
     private Cliente cliente;
+    private boolean confirmado = false;
 
     public VentanaJuego(Cliente cliente, String titulo) {
         this.cliente = cliente;
@@ -82,56 +83,19 @@ public class VentanaJuego implements Mensaje {
     }
 
     private void configurarConfirmar() {
-        confirmar = new JButton("Confirmar");
-        confirmar.setBackground(Color.LIGHT_GRAY);
-        confirmar.setOpaque(true);
-        confirmar.setBorderPainted(false);
-        confirmar.setFont(new Font("Arial", Font.BOLD, 14));
-        confirmarPanel.add(confirmar);
-
-        final boolean[] confirmadoArray = { false };
-
         confirmar.addActionListener(e -> {
-            if (!confirmadoArray[0]) {
+            if (!confirmado) {
                 Movimiento movSel = panelOpciones.getMovimientoSeleccionado();
                 if (movSel == null) {
                     JOptionPane.showMessageDialog(ventana, "Selecciona primero un movimiento.");
                     return;
                 }
-
-                // Enviar al servidor
-                MensajeMovimiento mm = new MensajeMovimiento(movSel.getNombre());
-                cliente.enviarMensaje(mm);
-                actualizarEstadoConexion(true);
-
-                confirmar.setBackground(Color.GREEN);
-                confirmar.setText("¡Confirmado!");
-                confirmadoArray[0] = true;
-
-                panelOpciones.setBotonesHabilitados(false);
-
-                // Mostrar movimiento del jugador 1
+                cliente.enviarMensaje(new MensajeMovimiento(movSel.getNombre()));
                 setMovimientoIcon(movimientoJugador1, movSel.getRutaImagen());
-
-                // Jugador 2 aleatorio
-                Movimiento[] movimientos = { new Piedra(), new Papel(), new Tijera(), new Lagarto(), new Spock() };
-                Movimiento jugador2 = movimientos[new java.util.Random().nextInt(movimientos.length)];
-                setMovimientoIcon(movimientoJugador2, jugador2.getRutaImagen());
-
-                // Determinar resultado
-                ResultadoJuego resultadoJuego = Logica.jugar(movSel, jugador2);
-                mostrarResultado(resultadoJuego);
-
-            } else {
-                // Reiniciar
-                confirmar.setBackground(Color.LIGHT_GRAY);
-                confirmar.setText("Confirmar");
-                confirmadoArray[0] = false;
-
-                panelOpciones.setBotonesHabilitados(true);
-                movimientoJugador1.setIcon(null);
-                movimientoJugador2.setIcon(null);
-                resultado.setVisible(false);
+                panelOpciones.setBotonesHabilitados(false);
+                confirmar.setText("¡Enviado!");
+                confirmar.setBackground(Color.GREEN);
+                confirmado = true;
             }
         });
     }
@@ -232,9 +196,19 @@ public class VentanaJuego implements Mensaje {
     }
 
     @Override
-    public void mensaje_entrante(String msj) {
-        SwingUtilities.invokeLater(() ->
-            JOptionPane.showMessageDialog(ventana, msj)
-        );
+    public void mensaje_entrante(Object msg) {
+        if (!(msg instanceof MensajeResultado)) return;
+        MensajeResultado mr = (MensajeResultado) msg;
+
+        setMovimientoIcon(movimientoJugador2,
+            MovimientoFactory.create(mr.getSuMovimiento()).getRutaImagen());
+        mostrarResultado(mr.getResultadoParaTi());
+
+        confirmado = false;
+        panelOpciones.setBotonesHabilitados(true);
+        confirmar.setText("Confirmar");
+        confirmar.setBackground(Color.LIGHT_GRAY);
     }
+    
+
 }

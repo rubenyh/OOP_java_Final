@@ -5,51 +5,42 @@ import java.net.Socket;
 public class ClientHandler implements Runnable {
     private final Socket socket;
     private final Server server;
-    private ObjectOutputStream oos;
     private final String clientIp;
+    private final ObjectOutputStream oos;
 
-    public ClientHandler(Socket socket, Server server) throws Exception {
-        this.socket = socket;
-        this.server = server;
-        this.clientIp = socket.getInetAddress().getHostAddress();
-        this.oos = new ObjectOutputStream(socket.getOutputStream());
+    public ClientHandler(Socket sock, Server server) throws Exception {
+        this.socket   = sock;
+        this.server   = server;
+        this.clientIp = sock.getInetAddress().getHostAddress();
+        this.oos      = new ObjectOutputStream(sock.getOutputStream());
     }
 
     @Override
     public void run() {
-        try (var ois = new ObjectInputStream(socket.getInputStream())) {
+        try (ObjectInputStream ois = new ObjectInputStream(socket.getInputStream())) {
             Object obj;
             while ((obj = ois.readObject()) != null) {
                 if (obj instanceof MensajeMovimiento) {
                     MensajeMovimiento mm = (MensajeMovimiento) obj;
-                    String tagged = clientIp + " ha seleccionado: " + mm.getMovimiento();
-                    System.out.println("[" + clientIp + "] " + mm.getMovimiento());
-                    server.broadcast(tagged);
+                    System.out.println("Received from " + clientIp + ": " + mm.getMovimiento());
+                    server.handleMove(this, mm.getMovimiento());
+                }
             }
-        }
-            // while ((obj = ois.readObject()) != null) {
-            //     String msg = (String) obj;
-            //     String tagged = clientIp + ": " + msg;
-            //     System.out.println("[" + clientIp + "] " + msg);
-            //     server.broadcast(tagged);
-            // }
         } catch (Exception ignored) {
-            server.removeClient(this);
         } finally {
             server.removeClient(this);
-            try { socket.close(); } catch (Exception ignored) {}
+            try { socket.close(); } catch (Exception e) {}
         }
     }
 
-    public void send(String msg) {
+    public void send(Object msg) {
         try {
             oos.writeObject(msg);
+            oos.flush();
         } catch (Exception e) {
             server.removeClient(this);
         }
     }
 
-    public String getClientIp() {
-        return clientIp;
-    }
+    public String getClientIp() { return clientIp; }
 }
