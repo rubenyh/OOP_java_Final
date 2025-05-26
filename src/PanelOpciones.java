@@ -35,11 +35,10 @@ public class PanelOpciones {
 
     private void crearBotones() {
         for (Movimiento mov : movimientos) {
-            // Asegúrate que getRutaImagen() retorna una ruta válida (ej. "/img/paper.png")
             java.net.URL ruta = getClass().getResource(mov.getRutaImagen());
             if (ruta == null) {
                 System.err.println("No se encontró la imagen para: " + mov.getNombre());
-                continue; // Salta si no se encontró la imagen
+                continue;
             }
 
             ImageIcon iconoOriginal = new ImageIcon(ruta);

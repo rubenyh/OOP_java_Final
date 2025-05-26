@@ -30,6 +30,23 @@ public class Server {
         while (true) {
             Socket clientSock = serverSocket.accept();
             String clientIp = clientSock.getInetAddress().getHostAddress();
+
+            try {
+                // Si ya existe, suma 1; si no, crea con 1 punto
+                JugadoresDTO existe = dao.readByIp(clientIp);
+                if (existe != null) {
+                    int i = existe.getPuntos();
+                    dao.incrementarPuntoPorIp(clientIp, i);
+                } else {
+                    JugadoresDTO nuevo = new JugadoresDTO();
+                    nuevo.setNombre("BBB");
+                    nuevo.setPuntos(0);
+                    nuevo.setIp(clientIp);
+                    dao.append(nuevo);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+}
             
             broadcast("STATE:ONLINE:" + clientIp);
 
@@ -79,16 +96,13 @@ public class Server {
                 int puntos1 = dto1.getPuntos();
                 int puntos2 = dto2.getPuntos();
 
-                // Aumentar puntos solo al jugador que ganó
                 if (r1 == ResultadoJuego.GANASTE) {
                     dao.incrementarPuntoPorIp(ip1, puntos1);
                 } else if (r2 == ResultadoJuego.GANASTE) {
                     dao.incrementarPuntoPorIp(ip2, puntos2);
                 }
 
-                // Obtener los puntos actualizado
 
-                // Enviar mensaje a cada cliente
                 for (ClientHandler c : clients) {
                     if (c.getClientIp().equals(ip1)) {
                         c.send(new MensajePuntos(puntos1, puntos2));

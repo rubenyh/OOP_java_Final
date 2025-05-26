@@ -14,6 +14,8 @@ public class JugadoresDAO extends ConexionBD {
             IP +
             " = ?";
 
+    private static final String SQL_DELETE_POINTS = "UPDATE jugadores SET " + PUNTOS + " = 0 WHERE " + IP + " = ?";
+
     private static final String SQL_INSERT = "INSERT INTO jugadores" +
             "(" + NOMBRE +
             "," + PUNTOS +
@@ -53,13 +55,10 @@ public class JugadoresDAO extends ConexionBD {
 
     public void append(JugadoresDTO dto) throws Exception {
         PreparedStatement ps = null;
-        // Objeto sobre el cual se almacena la consulta SQL previamente creada
         ps = conexion.prepareStatement(SQL_INSERT);
-        // ps.setString sustituye cada uno de los símbolos de interrogación en la sentencia SQL por los valores deseados
         ps.setString(1, dto.getNombre());
         ps.setInt(2, dto.getPuntos());
         ps.setString(3, dto.getIp());
-        // Ejecuta la actualización
         ps.executeUpdate();
         cerrar(ps);
     }
@@ -103,7 +102,14 @@ public class JugadoresDAO extends ConexionBD {
             puntos++;
             ps.setInt(1, puntos);
             ps.setString(2, ip);
-            return ps.executeUpdate();  // devuelve #filas afectadas
+            return ps.executeUpdate();
+        }
+    }
+
+    public int BorrarPuntos(String ip) throws SQLException{
+        try (PreparedStatement ps = conexion.prepareStatement(SQL_DELETE_POINTS)) {
+            ps.setString(1, ip);
+            return ps.executeUpdate();
         }
     }
 }

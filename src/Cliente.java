@@ -57,7 +57,6 @@ public class Cliente {
                             );
                         }
                     } else {
-                        // Handle non-String messages correctly
                         Object resultMsg = msg;
                         SwingUtilities.invokeLater(() ->
                             juego.mensaje_entrante(resultMsg)

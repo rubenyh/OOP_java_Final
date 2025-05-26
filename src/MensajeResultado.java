@@ -11,7 +11,6 @@ public class MensajeResultado implements Serializable {
         this.suMovimiento = su;
         this.resultadoParaTi = res;
     }
-        // getters…
 
     public String getTuMovimiento() {
         return tuMovimiento;

@@ -1,5 +1,10 @@
 import java.awt.*;
+import java.net.Socket;
+
 import javax.swing.*;
+
+import database.JugadoresDAO;
+import database.JugadoresDTO;
 import movimientos.Movimiento;
 
 public class VentanaJuego implements Mensaje {
@@ -181,7 +186,6 @@ public class VentanaJuego implements Mensaje {
 
     @Override
     public void mensaje_entrante(Object msg) {
-        // 1) Si es MensajePuntos, actualizamos los marcadores
         if (msg instanceof MensajePuntos) {
             MensajePuntos mp = (MensajePuntos) msg;
             SwingUtilities.invokeLater(() -> {
@@ -191,7 +195,6 @@ public class VentanaJuego implements Mensaje {
             return;
         }
 
-        // 2) Si es MensajeResultado, procesamos la jugada
         if (msg instanceof MensajeResultado) {
             MensajeResultado mr = (MensajeResultado) msg;
 
@@ -214,7 +217,6 @@ public class VentanaJuego implements Mensaje {
             return;
         }
 
-        // 3) Si es cualquier otro tipo de mensaje (String, chat...), lo muestras en diálogo
         if (msg instanceof String) {
             SwingUtilities.invokeLater(() ->
                 JOptionPane.showMessageDialog(ventana, (String)msg)
@@ -222,7 +224,13 @@ public class VentanaJuego implements Mensaje {
         }
     }
 
-    
+    // public void BorrarPuntos(){
+    //     var e1 = it.next();
+    //     var e2 = it.next();
+    //     String ip1 = e1.getKey();
+    //     JugadoresDAO dao = new JugadoresDAO();
+    //     JugadoresDTO dto1 = dao.readByIp();
+    // }
     
 
 }
